@@ -6,6 +6,9 @@
 # Node artifact files
 node_modules/
 dist/
+mysql_backup/
+vendor/
+swapfile
 
 # Compiled Java class files
 *.class
