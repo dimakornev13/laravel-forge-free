@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Events\SiteCreated;
 use App\Models\Site;
 use App\Repositories\SitesRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class SitesTest extends TestCase
@@ -51,10 +53,31 @@ class SitesTest extends TestCase
      */
     public function test_creating_page()
     {
-        $this->withoutExceptionHandling();
-
         $response = $this->actingAs($this->getUser())->get(route('sites.view'));
 
         $response->assertStatus(200);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_site_created_successful()
+    {
+        $this->seed();
+
+        Event::fake();
+
+        $parameters = [
+            'url' => 'uovgo.local'
+        ];
+
+        $response = $this->actingAs($this->getUser())->put(route('sites.store'), $parameters);
+
+        $response->assertRedirect(route('sites.index'));
+
+        $this->assertDatabaseHas((new Site())->getTable(), $parameters);
+        $this->assertDatabaseCount((new Site())->getTable(), 3);
+
+        Event::assertDispatched(SiteCreated::class);
     }
 }

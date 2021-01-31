@@ -34,7 +34,7 @@ class SitesRepository extends Repository
      */
     public function delete(Site $site)
     {
-        SiteDeleted::dispatch($site);
+        event(new SiteDeleted($site));
 
         $site->delete();
     }
@@ -48,7 +48,7 @@ class SitesRepository extends Repository
     {
         $site = $this->entity->create($data);
 
-        SiteCreated::dispatch($site);
+        event(new SiteCreated($site));
 
         return $site;
     }

@@ -24,7 +24,7 @@ class Create extends FormRequest
     public function rules()
     {
         return [
-            'url' => 'string|required'
+            'url' => 'string|unique:sites|required'
         ];
     }
 }

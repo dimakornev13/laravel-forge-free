@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Events\SiteCreated;
 use App\Events\SiteDeleted;
+use App\Listeners\SiteCreatedListener;
+use App\Listeners\SiteDeletedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,8 +16,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        SiteDeleted::class => [],
-        SiteCreated::class => [],
+        SiteCreated::class => [
+            SiteCreatedListener::class
+        ],
+        SiteDeleted::class => [
+            SiteDeletedListener::class
+        ],
     ];
 
     /**

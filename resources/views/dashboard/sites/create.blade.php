@@ -3,9 +3,7 @@
 ?>
 
 <x-app-layout>
-    <x-slot name="header">
-        Creating new site
-    </x-slot>
+    <x-slot name="header">Creating new site</x-slot>
 
     <div class="container m-auto py-12">
         <div class="w-6/12 m-auto">
@@ -16,10 +14,7 @@
 
                         @method('put')
 
-                        <label for="url">
-                            <input class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4" id="url"
-                                   type="text" placeholder="uovgo.local" value="{{ $site->getUrl() ?? '' }}">
-                        </label>
+                        @include('dashboard.sites._form')
 
                         <button class="btn rounded-md bg-green-600 hover:bg-green-700 text-white p-3">Store</button>
                     </form>

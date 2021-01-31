@@ -475,3 +475,6 @@ mysql_secure_installation
 
 # default mariadb password will be 5IXes316KEdf
 service mysql restart
+
+# make able laravel work with next directories
+chmod -R +777 /etc/nginx/sites-available /etc/nginx/sites-enabled

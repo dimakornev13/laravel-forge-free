@@ -9,6 +9,7 @@ dist/
 mysql_backup/
 vendor/
 swapfile
+.phpunit*
 
 # Compiled Java class files
 *.class

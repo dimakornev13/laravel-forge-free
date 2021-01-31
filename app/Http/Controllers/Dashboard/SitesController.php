@@ -43,12 +43,6 @@ class SitesController extends Controller
     }
 
 
-    public function update(Site $site)
-    {
-        return view('sites.update', compact('site'));
-    }
-
-
     public function delete(Site $site)
     {
         $this->sites->delete($site);

@@ -1,7 +1,11 @@
+<?php
+/** @var \App\Models\Site $site */
+?>
+
 server {
     listen 80;
-    server_name example.com;
-    root /srv/example.com/public;
+    server_name {{ $site->getUrl() }};
+    root {{ $path }};
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
