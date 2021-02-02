@@ -7,6 +7,7 @@
 node_modules/
 dist/
 mysql_backup/
+postgres_backup/
 vendor/
 .vagrant/
 public/css/app.css
