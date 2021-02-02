@@ -2,7 +2,7 @@
 
 function getHostUser()
 {
-    return getenv('USER');
+    return getenv('USER') ?? 'forge';
 }
 
 function getDefaultEnvironment()
