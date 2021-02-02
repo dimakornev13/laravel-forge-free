@@ -35,14 +35,14 @@ class SiteDeletedListener
     {
         $service = app(DeleteVhost::class);
 
-        try {
-            $service->process($event->site);
+        $service->process($event->site);
 
-            $result = $service->getResult();
+        $this->logger->success($service->getResult());
+    }
 
-            $this->logger->success($result);
-        } catch (\Error $exception) {
-            $this->logger->error(Json::encode($exception));
-        }
+
+    public function failed(\Throwable $exception)
+    {
+        $this->logger->error(Json::encode($exception));
     }
 }

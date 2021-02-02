@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 
 class SiteDeleted
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
 
     /**
      * @var Site
@@ -17,9 +17,8 @@ class SiteDeleted
 
 
     /**
-     * Create a new event instance.
-     *
-     * @return void
+     * SiteDeleted constructor.
+     * @param Site $site
      */
     public function __construct(Site $site)
     {

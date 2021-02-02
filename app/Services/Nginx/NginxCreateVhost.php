@@ -12,7 +12,10 @@ class NginxCreateVhost extends CreateVhost
     function process(Site $site)
     {
         $path = "{$site->getSiteDir()}/public";
-        @mkdir($path, 0755, true);
+        $result = mkdir($path, 0755, true);
+
+        if ($result === false)
+            throw new \Error("Cannot create directory for site {$site->getUrl()}");
 
         $nginxConfigFile = view('dashboard.nginx.vhost80', compact('site', 'path'));
 
@@ -20,11 +23,14 @@ class NginxCreateVhost extends CreateVhost
         $enablePath = "/etc/nginx/sites-enabled/{$site->getUrl()}";
         $result = file_put_contents($availablePath, $nginxConfigFile);
 
-        if($result === false)
+        if ($result === false)
             throw new \Error("Cannot create nginx config file {$availablePath}");
 
-        shell_exec("ln -s {$availablePath} {$enablePath}");
+        symlink($availablePath, $enablePath);
 
-        $this->result = shell_exec('sudo service nginx restart 2>&1');
+        $this->result = "Vhost for {$site->getUrl()} has been created successful";
+
+//        panel is not available while it works
+//        $this->result = shell_exec('sudo service nginx restart');
     }
 }

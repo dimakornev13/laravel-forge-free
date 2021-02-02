@@ -10,8 +10,10 @@ use App\Services\Logger\DbLogger;
 use App\Services\Logger\Logger;
 use App\Services\Nginx\CreateVhost;
 use App\Services\Nginx\DeleteVhost;
+use App\Services\Nginx\NginxRestart;
 use App\Services\Nginx\NginxCreateVhost;
 use App\Services\Nginx\NginxDeleteVhost;
+use App\Services\Nginx\ServerRestart;
 use App\View\Components\ConfirmModalDelete;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -43,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CertificateObtain::class, LetsEncrypt::class);
         $this->app->bind(Logger::class, DbLogger::class);
         $this->app->bind(Deploy::class, DeployImplement::class);
+        $this->app->bind(ServerRestart::class, NginxRestart::class);
 
     }
 }

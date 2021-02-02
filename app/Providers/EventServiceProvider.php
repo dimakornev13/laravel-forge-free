@@ -6,6 +6,7 @@ use App\Events\QueueCreated;
 use App\Events\QueueDeleted;
 use App\Events\SiteCreated;
 use App\Events\SiteDeleted;
+use App\Listeners\NginxRestartListener;
 use App\Listeners\SiteCreatedListener;
 use App\Listeners\SiteDeletedListener;
 use App\Listeners\SupervisorReload;
@@ -20,10 +21,12 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         SiteCreated::class => [
-            SiteCreatedListener::class
+            SiteCreatedListener::class,
+            NginxRestartListener::class
         ],
         SiteDeleted::class => [
-            SiteDeletedListener::class
+            SiteDeletedListener::class,
+            NginxRestartListener::class
         ],
         QueueCreated::class => [
             SupervisorReload::class

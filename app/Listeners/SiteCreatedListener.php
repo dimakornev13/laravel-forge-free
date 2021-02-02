@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\SiteCreated;
 use App\Services\Logger\Logger;
 use App\Services\Nginx\CreateVhost;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Psy\Util\Json;
 
 class SiteCreatedListener
@@ -36,14 +34,14 @@ class SiteCreatedListener
     {
         $service = app(CreateVhost::class);
 
-        try {
-            $service->process($event->site);
+        $service->process($event->site);
 
-            $result = $service->getResult();
+        $this->logger->success($service->getResult());
+    }
 
-            $this->logger->success($result);
-        } catch (\Error $exception) {
-            $this->logger->error(Json::encode($exception));
-        }
+
+    public function failed(\Throwable $exception)
+    {
+        $this->logger->error(Json::encode($exception));
     }
 }

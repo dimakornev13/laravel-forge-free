@@ -6,7 +6,9 @@ namespace App\Services\Nginx;
 
 use App\Traits\Result;
 
-class NginxCommon
+abstract class ServerRestart
 {
     use Result;
+
+    abstract function process():void;
 }
