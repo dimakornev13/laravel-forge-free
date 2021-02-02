@@ -23,7 +23,7 @@ ln -sfn -T $ROOT_PATH/$DEPLOY_DIR $ROOT_PATH/www
 
 ln -sfn $ROOT_PATH/.env $ROOT_PATH/$DEPLOY_DIR
 
-service php7.4-fpm restart 2>&1
+sudo service php7.4-fpm reload 2>&1
 
 # todo opcache enable
 php $ROOT_PATH/$DEPLOY_DIR/artisan migrate --force 2>&1

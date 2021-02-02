@@ -16,6 +16,6 @@ class NginxDeleteVhost extends DeleteVhost
         shell_exec("rm /etc/nginx/sites-available/{$site->getUrl()}");
         shell_exec("rm /etc/nginx/sites-enabled/{$site->getUrl()}");
         shell_exec("rm -rf /home/{$userHost}/{$site->getUrl()}");
-        shell_exec("service nginx restart");
+        $this->result = shell_exec("sudo service nginx restart 2>&1");
     }
 }

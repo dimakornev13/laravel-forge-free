@@ -6,7 +6,25 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+echo "Enter email (login) for panel: "
+read LOGIN
 
+echo "Enter password for panel: "
+read LOGIN_PASSWORD
+
+LOGIN_PASSWORD=$(htpasswd -bnBC 10 "" $LOGIN_PASSWORD | tr -d ':\n')
+
+echo "Enter system user password (Forge user): "
+read FORGE_PASSWORD
+
+echo "Enter mysql root password: "
+read MYSQL_ROOT_PASSWORD
+
+echo "Enter mysql user password: "
+read MYSQL_USER_PASSWORD
+
+echo "Enter SSH public key (it can be obtained like 'cat ~/.ssh/id_rsa.pub'): "
+read SSH_KEY
 
 # sudo sed -i "s/#precedence ::ffff:0:0\/96  100/precedence ::ffff:0:0\/96  100/" /etc/gai.conf
 
@@ -113,18 +131,17 @@ cp /root/.bashrc /home/forge/.bashrc
 
 # Set The Sudo Password For Forge
 
-PASSWORD=$(mkpasswd -m sha-512 S38o6FTjaG6YeCozPf4h)
+PASSWORD=$(mkpasswd -m sha-512 $FORGE_PASSWORD)
 usermod --password $PASSWORD forge
 
 # Build Formatted Keys &amp; Copy Keys To Forge
 
 
-# cat > /root/.ssh/authorized_keys << EOF
-# Laravel Forge
-# ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxGOt8yAydHsabuioBejak4R4WfeIsV1F30bB867/fDIH9WgYkDnbCT9nRD1mYDW8JR4Dq16aZuMEs0Gdd4CuOW6lYt229GIHN96dEBqcrBzS8ID51/Nj1UHSquvvKkTbfEOT7uIomOuJVgs48AfCjmcsW9GyK2CJrAQtgvVFUXUsBNVAH289g8Xrqgmf5p4FPvHpdf0nEZA79X9wADAODpZeAP8P80M2Po1ZWRWpPWSrlHKUtJQldBz7n3e6DTeXdj3yD4mUgdP2lyYQD63bfRFzX/tKBG/yXRcMUjIUsn/3ZPQRJkLO9SRloDAM7pqsT3jwFBHOREn6g963deYab worker@forge.laravel.com
+cat > /root/.ssh/authorized_keys << EOF
+# Your PC
+$SSH_KEY
 
-
-# EOF
+EOF
 
 
 cp /root/.ssh/authorized_keys /home/forge/.ssh/authorized_keys
@@ -169,6 +186,7 @@ chmod 700 /home/forge/.ssh/id_rsa
 ufw allow 22
 ufw allow 80
 ufw allow 443
+ufw allow 3306
 ufw --force enable
 
 # Allow FPM Restart
@@ -466,20 +484,58 @@ update-rc.d -f apparmor remove
 apt-get remove apparmor apparmor-utils -y
 
 
-# Setup MariaDB Repositories
-
-apt install mariadb-client mariadb-server -y
-
-sed -i 's/bind-address/\#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
-mysql_secure_installation
-
-# default mariadb password will be 5IXes316KEdf
-service mysql restart
-
 # make able laravel work with next directories
-chmod -R +777 /etc/nginx/sites-available /etc/nginx/sites-enabled
+chmod -R 777 /etc/nginx/sites-available /etc/nginx/sites-enabled
+
+chmod 777 /etc//etc/supervisor/conf.d
 
 # work for snap
 snap install core && snap refresh core
 snap install --classic certbot
 ln -s /snap/bin/certbot /usr/bin/certbot
+
+
+# git clone to panel directory
+git clone git@bitbucket.org:m0xy/laravel-web-panel-hosting.git /home/forge/panel
+
+# mysql section
+# Setup MariaDB Repositories
+
+apt install mariadb-client mariadb-server -y
+
+sed -i 's/bind-address/\#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
+#mysql_secure_installation
+
+sed -i "s/DB_DATABASE=homestead/DB_DATABASE=panel/g" /home/forge/panel/.env
+sed -i "s/homestead/forge/g" /home/forge/panel/.env
+sed -i "s/secret/$MYSQL/g" /home/forge/panel/.env
+
+mysql --user=root <<_EOF_
+    UPDATE mysql.user SET Password=PASSWORD('$MYSQL_ROOT_PASSWORD') WHERE User='root';
+    DELETE FROM mysql.user WHERE User='';
+    DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+    DROP DATABASE IF EXISTS test;
+    DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+
+    CREATE DATABASE IF NOT EXISTS forge CHARACTER SET = 'utf8' COLLATE = 'utf8_general_ci';
+    GRANT ALL privileges ON `db`.* TO 'forge'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD';
+
+    FLUSH PRIVILEGES;
+_EOF_
+
+php /home/forge/panel/artisan key:generate
+php /home/forge/panel/artisan migrate
+
+mysql --user=root <<_EOF_
+    INSERT INTO panel.users (name, email, password) VALUES('$LOGIN', '$LOGIN', '$LOGIN_PASSWORD');
+_EOF_
+
+service mysql restart
+
+# todo nginx default file for panel
+rm -rf /etc/nginx/sites-available/*
+rm -rf /etc/nginx/sites-enabled/*
+cp /home/forge/panel/nginx/panel /etc/nginx/sites-available/
+ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
+
+service nginx restart
