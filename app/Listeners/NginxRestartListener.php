@@ -44,6 +44,6 @@ class NginxRestartListener implements ShouldQueue
     }
 
     public function failed(\Throwable $exception){
-        $this->logger->error(Json::encode($exception));
+        $this->logger->error($exception->getMessage());
     }
 }

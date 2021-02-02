@@ -41,7 +41,6 @@ class Deploy implements ShouldQueue
     public function handle()
     {
         /** @var DeployImplement $deployService */
-
         $deployService = app(\App\Services\Deploy\Deploy::class);
         $deployService->deploy($this->site);
 
@@ -51,6 +50,6 @@ class Deploy implements ShouldQueue
 
     function failed(\Throwable $exception)
     {
-        $this->logger->error(Json::encode($exception));
+        $this->logger->error($exception->getMessage());
     }
 }
