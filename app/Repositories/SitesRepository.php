@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\EnvUpdated;
 use App\Events\SiteCreated;
 use App\Events\SiteDeleted;
 use App\Models\Site;
@@ -61,6 +62,9 @@ class SitesRepository extends Repository
     public function update(Site $site, array $data)
     {
         $site->update($data);
+
+        if (!empty($data['environment']))
+            event(new EnvUpdated($site));
 
         return $site;
     }

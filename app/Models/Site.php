@@ -74,4 +74,9 @@ class Site extends Model
         $user = getHostUser();
         return "/home/{$user}/$this->url/www";
     }
+
+    function getEnvDir(){
+        $user = getHostUser();
+        return "/home/{$user}/$this->url/.env";
+    }
 }

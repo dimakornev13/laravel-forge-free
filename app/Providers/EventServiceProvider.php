@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\EnvUpdated;
 use App\Events\QueueCreated;
 use App\Events\QueueDeleted;
 use App\Events\SiteCreated;
 use App\Events\SiteDeleted;
+use App\Listeners\EnvUpdatedListener;
 use App\Listeners\NginxRestartListener;
 use App\Listeners\SiteCreatedListener;
 use App\Listeners\SiteDeletedListener;
@@ -33,6 +35,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         QueueDeleted::class => [
             SupervisorReload::class
+        ],
+        EnvUpdated::class => [
+            EnvUpdatedListener::class
         ]
     ];
 
