@@ -12,8 +12,6 @@ read LOGIN
 echo "Enter password for panel: "
 read LOGIN_PASSWORD
 
-LOGIN_PASSWORD=$(htpasswd -bnBC 10 "" $LOGIN_PASSWORD | tr -d ':\n')
-
 echo "Enter system user password (Forge user): "
 read FORGE_PASSWORD
 
@@ -77,7 +75,9 @@ apt-get update
 add-apt-repository universe
 
 apt-get install -y build-essential curl pkg-config fail2ban gcc g++ git libmcrypt4 libpcre3-dev \
-make python3 python3-pip sendmail supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev
+make python3 python3-pip sendmail supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev htpasswd
+
+LOGIN_PASSWORD=$(htpasswd -bnBC 10 "" $LOGIN_PASSWORD | tr -d ':\n')
 
 # Install Python Httpie
 
