@@ -7,6 +7,8 @@ use App\Events\QueueCreated;
 use App\Events\QueueDeleted;
 use App\Events\SiteCreated;
 use App\Events\SiteDeleted;
+use App\Listeners\CronAddListener;
+use App\Listeners\CronRemoveListener;
 use App\Listeners\EnvUpdatedListener;
 use App\Listeners\NginxRestartListener;
 use App\Listeners\SiteCreatedListener;
@@ -24,11 +26,13 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         SiteCreated::class => [
             SiteCreatedListener::class,
-            NginxRestartListener::class
+            NginxRestartListener::class,
+            CronAddListener::class
         ],
         SiteDeleted::class => [
             SiteDeletedListener::class,
-            NginxRestartListener::class
+            NginxRestartListener::class,
+            CronRemoveListener::class
         ],
         QueueCreated::class => [
             SupervisorReload::class
