@@ -24,14 +24,14 @@ class Deploy implements ShouldQueue
     /**
      * Deploy constructor.
      * @param Site $site
-     * @param Logger $logger
      */
-    public function __construct(Site $site, Logger $logger)
+    public function __construct(Site $site)
     {
         $this->site = $site;
 
-        $this->logger = $logger;
+        $this->logger = app(Logger::class);
     }
+
 
     /**
      * Execute the job.
@@ -45,12 +45,12 @@ class Deploy implements ShouldQueue
         $deployService = app(\App\Services\Deploy\Deploy::class);
         $deployService->deploy($this->site);
 
-        $result = $deployService->getResult();
-
-        $this->logger->success($result);
+        $this->logger->success($deployService->getResult());
     }
 
-    function failed(\Throwable $exception){
+
+    function failed(\Throwable $exception)
+    {
         $this->logger->error(Json::encode($exception));
     }
 }
