@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Services\Certificate\CertificateObtain;
+use App\Services\Certificate\LetsEncrypt;
+use App\Services\Deploy\Deploy;
+use App\Services\Deploy\DeployImplement;
+use App\Services\Logger\DbLogger;
+use App\Services\Logger\Logger;
 use App\Services\Nginx\CreateVhost;
 use App\Services\Nginx\DeleteVhost;
 use App\Services\Nginx\NginxCreateVhost;
@@ -22,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
+
     /**
      * Bootstrap any application services.
      *
@@ -33,5 +40,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(CreateVhost::class, NginxCreateVhost::class);
         $this->app->bind(DeleteVhost::class, NginxDeleteVhost::class);
+        $this->app->bind(CertificateObtain::class, LetsEncrypt::class);
+        $this->app->bind(Logger::class, DbLogger::class);
+        $this->app->bind(Deploy::class, DeployImplement::class);
+
     }
 }

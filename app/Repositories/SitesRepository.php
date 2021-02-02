@@ -52,4 +52,17 @@ class SitesRepository extends Repository
 
         return $site;
     }
+
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    public function update(Site $site, array $data)
+    {
+        $site->update($data);
+
+        return $site;
+    }
+
 }

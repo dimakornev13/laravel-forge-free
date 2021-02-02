@@ -34,12 +34,23 @@ class SitesController extends Controller
     }
 
 
+    public function update(Site $site)
+    {
+        $this->sites->update($site, request()->all());
+
+        return redirect()->back();
+    }
+
+
+    public function view(Site $site)
+    {
+        return redirect()->route('deploy', ['site' => $site]);
+    }
+
 
     public function store(Create $request)
     {
-        $site = $this->sites->create($request->validated());
-
-        return redirect()->route('sites.index');
+        return redirect()->route('sites.view', ['site' => $this->sites->create($request->validated())]);
     }
 
 

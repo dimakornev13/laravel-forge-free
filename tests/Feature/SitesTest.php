@@ -68,16 +68,49 @@ class SitesTest extends TestCase
         Event::fake();
 
         $parameters = [
-            'url' => 'uovgo.local'
+            'url' => 'uovgo.ru'
         ];
 
         $response = $this->actingAs($this->getUser())->put(route('sites.store'), $parameters);
 
-        $response->assertRedirect(route('sites.index'));
+        $site = Site::where('url', $parameters['url'])->first();
+
+        $response->assertRedirect(route('sites.view', ['site' => $site]));
 
         $this->assertDatabaseHas((new Site())->getTable(), $parameters);
         $this->assertDatabaseCount((new Site())->getTable(), 3);
+        $this->assertNotEmpty($site->getDeployScript());
+
+        dump($site->getDeployScript());
 
         Event::assertDispatched(SiteCreated::class);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_site_updated_successful()
+    {
+        $this->seed();
+
+        $this->withoutExceptionHandling();
+
+        Event::fake();
+
+        $site = Site::first();
+
+        $parameters = [
+            'deploy_script' => 'some script',
+            'environment' => 'some environment',
+            'repository' => 'some repository'
+        ];
+
+        $response = $this->actingAs($this->getUser())->post(route('sites.update', ['site' => $site]), $parameters);
+
+        $site = Site::first();
+
+        $this->assertEquals($parameters['deploy_script'], $site->getDeployScript());
+        $this->assertEquals($parameters['repository'], $site->getRepository());
+        $this->assertEquals($parameters['environment'], $site->getEnvironment());
     }
 }

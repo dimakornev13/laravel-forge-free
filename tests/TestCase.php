@@ -11,10 +11,10 @@ abstract class TestCase extends BaseTestCase
 
     protected function getUser()
     {
-        return User::factory([
+        return User::factory()->make([
             'email' => 'dimakornev13@yandex.ru',
             'name' => 'dimakornev13',
             'password' => bcrypt('Nac578')
-        ])->make();
+        ]);
     }
 }

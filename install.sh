@@ -478,3 +478,8 @@ service mysql restart
 
 # make able laravel work with next directories
 chmod -R +777 /etc/nginx/sites-available /etc/nginx/sites-enabled
+
+# work for snap
+snap install core && snap refresh core
+snap install --classic certbot
+ln -s /snap/bin/certbot /usr/bin/certbot

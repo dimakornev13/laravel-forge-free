@@ -17,6 +17,9 @@ class CreateSitesTable extends Migration
             $table->id();
 
             $table->string('url');
+            $table->string('repository')->nullable();
+            $table->longText('deploy_script')->nullable();
+            $table->longText('environment')->nullable();
 
             $table->timestamps();
         });

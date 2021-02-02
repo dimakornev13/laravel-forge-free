@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\QueueCreated;
+use App\Events\QueueDeleted;
 use App\Events\SiteCreated;
 use App\Events\SiteDeleted;
 use App\Listeners\SiteCreatedListener;
 use App\Listeners\SiteDeletedListener;
+use App\Listeners\SupervisorReload;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -22,6 +25,12 @@ class EventServiceProvider extends ServiceProvider
         SiteDeleted::class => [
             SiteDeletedListener::class
         ],
+        QueueCreated::class => [
+            SupervisorReload::class
+        ],
+        QueueDeleted::class => [
+            SupervisorReload::class
+        ]
     ];
 
     /**

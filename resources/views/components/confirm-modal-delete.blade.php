@@ -1,3 +1,17 @@
+<script>
+    function confirmDelete(){
+        return{
+            openModal: false,
+            shouldSend: false,
+
+            submitForm(){
+                console.log(this.shouldSend)
+                return this.shouldSend
+            }
+        }
+    }
+</script>
+
 <form action="{{ url($url) }}" method="post" x-data="confirmDelete()" x-on:submit="submitForm">
     @csrf
 
@@ -30,7 +44,7 @@
                 x-transition:leave-end="scale-0"
             >
                 <header class="flex flex-col justify-center items-center p-3 text-green-600">
-                    <h2 class="font-semibold text-2xl">Are you sure to delete this site?</h2>
+                    <h2 class="font-semibold text-2xl">Are you sure to delete this?</h2>
                 </header>
                 <main class="p-3 text-center">
                     <b>{{ $content }}</b>

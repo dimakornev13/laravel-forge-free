@@ -12,8 +12,8 @@ class NginxCreateVhost extends CreateVhost
     function process(Site $site)
     {
         $userHost = getHostUser();
-        $path = "/home/{$userHost}/{$site->getUrl()}/public";
-        @mkdir($path, 0777, true);
+        $path = "/home/{$userHost}/{$site->getUrl()}/www/public";
+        @mkdir($path, 0755, true);
 
         $nginxConfigFile = view('dashboard.nginx.vhost80', compact('site', 'path'));
 

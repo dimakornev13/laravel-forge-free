@@ -8,6 +8,8 @@ node_modules/
 dist/
 mysql_backup/
 vendor/
+.vagrant/
+public/css/app.css
 swapfile
 .phpunit*
 
