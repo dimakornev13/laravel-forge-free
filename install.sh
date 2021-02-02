@@ -75,7 +75,8 @@ apt-get update
 add-apt-repository universe
 
 apt-get install -y build-essential curl pkg-config fail2ban gcc g++ git libmcrypt4 libpcre3-dev \
-make python3 python3-pip sendmail supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev htpasswd
+make python3 python3-pip sendmail supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev \
+htpasswd whois
 
 LOGIN_PASSWORD=$(htpasswd -bnBC 10 "" $LOGIN_PASSWORD | tr -d ':\n')
 
@@ -452,31 +453,6 @@ sudo sed -i "s/fs.protected_regular = .*/fs.protected_regular = 0/" /usr/lib/sys
 
 sysctl --system
 
-# Setup Unattended Security Upgrades
-
-
-
-apt-get install -y unattended-upgrades
-
-cat > /etc/apt/apt.conf.d/50unattended-upgrades << EOF
-Unattended-Upgrade::Allowed-Origins {
-    "Ubuntu focal-security";
-};
-Unattended-Upgrade::Package-Blacklist {
-    //
-};
-EOF
-
-cat > /etc/apt/apt.conf.d/10periodic << EOF
-APT::Periodic::Update-Package-Lists "1";
-APT::Periodic::Download-Upgradeable-Packages "1";
-APT::Periodic::AutocleanInterval "7";
-APT::Periodic::Unattended-Upgrade "1";
-EOF
-
-echo "chose 'no'"
-echo "If you don't do this, the ISPConfig installation will fail."
-dpkg-reconfigure dash
 
 
 service apparmor stop
@@ -487,7 +463,7 @@ apt-get remove apparmor apparmor-utils -y
 # make able laravel work with next directories
 chmod -R 777 /etc/nginx/sites-available /etc/nginx/sites-enabled
 
-chmod 777 /etc//etc/supervisor/conf.d
+chmod 777 /etc/supervisor/conf.d
 
 # work for snap
 snap install core && snap refresh core
@@ -496,7 +472,8 @@ ln -s /snap/bin/certbot /usr/bin/certbot
 
 
 # git clone to panel directory
-git clone git@bitbucket.org:m0xy/laravel-web-panel-hosting.git /home/forge/panel
+PATH_TO_PANEL=/home/forge/panel
+git clone https://m0xy@bitbucket.org/m0xy/laravel-web-panel-hosting.git $PATH_TO_PANEL
 
 # mysql section
 # Setup MariaDB Repositories
@@ -506,41 +483,45 @@ apt install mariadb-client mariadb-server -y
 sed -i 's/bind-address/\#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 #mysql_secure_installation
 
-sed -i "s/DB_DATABASE=homestead/DB_DATABASE=panel/g" /home/forge/panel/.env
-sed -i "s/homestead/forge/g" /home/forge/panel/.env
-sed -i "s/secret/$MYSQL/g" /home/forge/panel/.env
+mysql -u root -e "UPDATE mysql.user SET Password=PASSWORD('$MYSQL_ROOT_PASSWORD') WHERE User='root'"
+mysql -u root -e "DELETE FROM mysql.user WHERE User=''"
+mysql -u root -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
+mysql -u root -e "DROP DATABASE IF EXISTS test"
+mysql -u root -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS panel CHARACTER SET = 'utf8' COLLATE = 'utf8_general_ci'"
+mysql -u root -e "GRANT ALL privileges ON panel.* TO 'forge'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD'"
+mysql -u root -e "FLUSH PRIVILEGES"
 
-mysql --user=root <<_EOF_
-    UPDATE mysql.user SET Password=PASSWORD('$MYSQL_ROOT_PASSWORD') WHERE User='root';
-    DELETE FROM mysql.user WHERE User='';
-    DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-    DROP DATABASE IF EXISTS test;
-    DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --working-dir=$PATH_TO_PANEL
 
-    CREATE DATABASE IF NOT EXISTS forge CHARACTER SET = 'utf8' COLLATE = 'utf8_general_ci';
-    GRANT ALL privileges ON `db`.* TO 'forge'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD';
+npm install --prefix $PATH_TO_PANEL && npm run production --prefix $PATH_TO_PANEL
 
-    FLUSH PRIVILEGES;
-_EOF_
+sed -i "s/DB_DATABASE=homestead/DB_DATABASE=panel/g" $PATH_TO_PANEL/.env
+sed -i "s/homestead/forge/g" $PATH_TO_PANEL/.env
+sed -i "s/secret/$MYSQL_USER_PASSWORD/g" $PATH_TO_PANEL/.env
 
-php /home/forge/panel/artisan key:generate
-php /home/forge/panel/artisan migrate
+php $PATH_TO_PANEL/artisan key:generate
+php $PATH_TO_PANEL/artisan migrate
 
-mysql --user=root <<_EOF_
-    INSERT INTO panel.users (name, email, password) VALUES('$LOGIN', '$LOGIN', '$LOGIN_PASSWORD');
-_EOF_
+mysql -u root -e "INSERT INTO panel.users (name, email, password) VALUES('$LOGIN', '$LOGIN', '$LOGIN_PASSWORD')"
 
-service mysql restart
 
-# todo nginx default file for panel
-rm -rf /etc/nginx/sites-available/*
-rm -rf /etc/nginx/sites-enabled/*
-cp /home/forge/panel/templates/panel /etc/nginx/sites-available/
+# nginx default file for panel
+#rm -rf /etc/nginx/sites-available/*
+#rm -rf /etc/nginx/sites-enabled/*
+cp $PATH_TO_PANEL/templates/panel /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
 
-service nginx restart
 
-cp /home/forge/panel/templates/panel-supervisor.conf /etc/supervisor/conf.d
+
+chown -R forge:forge $PATH_TO_PANEL
+chmod -R 775 $PATH_TO_PANEL
+
+cp $PATH_TO_PANEL/templates/panel-supervisor.conf /etc/supervisor/conf.d
 supervisorctl reread
 supervisorctl update
 supervisorctl start laravel-worker:*
+
+service mysql restart
+service nginx restart
+service php7.4-fpm restart
