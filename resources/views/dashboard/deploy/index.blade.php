@@ -27,8 +27,11 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 
-                <div class="p-6 bg-white border-b border-gray-200 flex flex-col space-y-12">
-                    <h5 class="font-bold">Deploy Script</h5>
+                <div class="p-6 bg-white border-b border-gray-200 flex flex-col space-y-6">
+                    <div>
+                        <h5 class="font-bold">Deploy Script</h5>
+                        <span>if you want set this field to default just delete everything below and click button update</span>
+                    </div>
 
                     @if(empty($site->getDeployScript()))
                         <p class="text-red-600">In order to make deploy available save this field below</p>

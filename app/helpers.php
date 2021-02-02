@@ -2,7 +2,9 @@
 
 function getHostUser()
 {
-    return getenv('USER') ?? 'forge';
+    $user = getenv('USER');
+
+    return empty($user) ? 'forge' : $user;
 }
 
 function getDefaultEnvironment()
