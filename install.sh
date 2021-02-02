@@ -535,7 +535,12 @@ service mysql restart
 # todo nginx default file for panel
 rm -rf /etc/nginx/sites-available/*
 rm -rf /etc/nginx/sites-enabled/*
-cp /home/forge/panel/nginx/panel /etc/nginx/sites-available/
+cp /home/forge/panel/templates/panel /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
 
 service nginx restart
+
+cp /home/forge/panel/templates/panel-supervisor.conf /etc/supervisor/conf.d
+supervisorctl reread
+supervisorctl update
+supervisorctl start laravel-worker:*
