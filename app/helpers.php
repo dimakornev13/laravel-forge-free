@@ -7,6 +7,11 @@ function getHostUser()
     return empty($user) ? 'forge' : $user;
 }
 
+function cleanFromR(string $str)
+{
+    return str_replace("\r", '', $str);
+}
+
 function getDefaultEnvironment()
 {
     return <<<EOF

@@ -41,7 +41,7 @@ class Site extends Model
 
     function getDeployScript()
     {
-        return $this->deploy_script;
+        return cleanFromR($this->deploy_script);
     }
 
 
@@ -53,7 +53,7 @@ class Site extends Model
 
     function getEnvironment()
     {
-        return $this->environment;
+        return cleanFromR($this->environment);
     }
 
 
