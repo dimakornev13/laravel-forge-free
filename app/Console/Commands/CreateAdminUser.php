@@ -41,7 +41,7 @@ class CreateAdminUser extends Command
     {
         $repo = app(UserRepository::class);
         $repo->create([
-            'login' => $this->argument('login'),
+            'name' => $this->argument('login'),
             'email' => $this->argument('login'),
             'password' => bcrypt($this->argument('password')),
         ]);
