@@ -30,6 +30,12 @@ class Site extends Model
     }
 
 
+    function getCleanUrl()
+    {
+        return str_replace(['-', '.'], '', $this->getUrl());
+    }
+
+
     /**
      * @return mixed
      */

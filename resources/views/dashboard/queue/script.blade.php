@@ -1,7 +1,7 @@
 <?php
 /** @var \App\Models\Queue $queue */
 ?>
-[program:laravel-worker]
+[program:{{ $queue->site->getCleanUrl() }}-worker]
 process_name=%(program_name)s_%(process_num)02d
 {{--command=php {{ $queue->site->getSiteDir() }}/artisan queue:work --sleep={{ $queue->getRestSecondsWhenEmpty() }} --tries={{ $queue->getTries() }} --max-time={{ $queue->getTimeout() }}--}}
 command=php {{ $queue->site->getSiteDir() }}/artisan queue:work
