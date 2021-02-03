@@ -402,6 +402,7 @@ sudo apt-get install -y nodejs
 npm install -g pm2
 npm install -g gulp
 npm install -g yarn
+npm install -g cross-env
 
 #
 # REQUIRES:

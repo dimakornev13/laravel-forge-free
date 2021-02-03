@@ -53,6 +53,10 @@ class Site extends Model
 
     function getEnvironment()
     {
+        $key = strtolower($this->getUrl());
+        $key = str_replace(['-', '.'], '_', $key);
+
+        $default = str_replace('CACHE_PREFIX=panel', "CACHE_PREFIX={$key}", getDefaultEnvironment());
         return cleanFromR($this->environment ?? getDefaultEnvironment());
     }
 
@@ -75,7 +79,9 @@ class Site extends Model
         return "/home/{$user}/$this->url/www";
     }
 
-    function getEnvDir(){
+
+    function getEnvDir()
+    {
         $user = getHostUser();
         return "/home/{$user}/$this->url/.env";
     }

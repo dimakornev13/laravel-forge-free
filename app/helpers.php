@@ -21,6 +21,8 @@ APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost
 
+CACHE_PREFIX=panel
+
 LOG_CHANNEL=stack
 LOG_LEVEL=debug
 
