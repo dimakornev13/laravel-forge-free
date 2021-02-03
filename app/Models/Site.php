@@ -57,7 +57,7 @@ class Site extends Model
         $key = str_replace(['-', '.'], '_', $key);
 
         $default = str_replace('CACHE_PREFIX=panel', "CACHE_PREFIX={$key}", getDefaultEnvironment());
-        return cleanFromR($this->environment ?? getDefaultEnvironment());
+        return cleanFromR($this->environment ?? $default);
     }
 
 
