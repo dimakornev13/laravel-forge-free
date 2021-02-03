@@ -511,7 +511,7 @@ chmod -R 775 $PATH_TO_PANEL
 cp $PATH_TO_PANEL/templates/panel-supervisor.conf /etc/supervisor/conf.d
 supervisorctl reread
 supervisorctl update
-supervisorctl start laravel-worker:*
+supervisorctl start all
 
 (echo "* * * * * /usr/bin/php $PATH_TO_PANEL/artisan schedule:run >> /dev/null 2>&1") | crontab -u forge -
 
