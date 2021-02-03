@@ -410,10 +410,6 @@ npm install -g yarn
 
 export DEBIAN_FRONTEND=noninteractive
 
-# todo mariadb set up
-
-
-
 # Install &amp; Configure Redis Server
 
 apt-get install -y redis-server
@@ -524,3 +520,5 @@ supervisorctl start laravel-worker:*
 service mysql restart
 service nginx restart
 service php7.4-fpm restart
+
+# todo add panel's cron for letsencrypt

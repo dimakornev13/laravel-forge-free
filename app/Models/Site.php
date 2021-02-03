@@ -53,7 +53,7 @@ class Site extends Model
 
     function getEnvironment()
     {
-        return cleanFromR($this->environment ?? '');
+        return cleanFromR($this->environment ?? getDefaultEnvironment());
     }
 
 
