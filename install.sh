@@ -478,7 +478,7 @@ mysql -u root -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('loc
 mysql -u root -e "DROP DATABASE IF EXISTS test"
 mysql -u root -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS panel CHARACTER SET = 'utf8' COLLATE = 'utf8_general_ci'"
-mysql -u root -e "GRANT ALL privileges ON panel.* TO 'forge'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD'"
+mysql -u root -e "GRANT ALL privileges ON *.* TO 'forge'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD'"
 mysql -u root -e "FLUSH PRIVILEGES"
 
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --working-dir=$PATH_TO_PANEL
