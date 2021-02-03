@@ -15,7 +15,7 @@ class Supervisor
 
     function reload(Site $site)
     {
-        $this->result = shell_exec("php {$site->getSiteDir()}/artisan queue:restart");
+        $this->result = shell_exec(view('dashboard.supervisor.script', compact('site')));
     }
 
 
