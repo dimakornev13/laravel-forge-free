@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\SiteDeleted;
 use App\Models\Site;
+use App\Services\Cron\CronDelete;
 use App\Services\Logger\Logger;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,25 +30,17 @@ class CronRemoveListener
      */
     public function handle(SiteDeleted $event)
     {
-        try {
-            $this->process($event->site);
+        /** @var CronDelete $service */
+        $service = app(CronDelete::class);
 
-            $this->logger->success("Cron has been removed for site {$event->site->getUrl()}");
+        try {
+            $service->process($event->site);
+
+            $this->logger->success($service->getResult());
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());
         }
     }
 
 
-    private function process(Site $site)
-    {
-        $user = getHostUser();
-        $cronContent = shell_exec("crontab -u {$user} -l");
-
-        $cronContent = collect(explode("\n", $cronContent))->filter(function ($line) use ($site) {
-            return stripos($line, $site->getUrl()) === false;
-        })->implode("\n");
-
-        shell_exec("(crontab -l 2>/dev/null; echo \"{$cronContent}\") | crontab -");
-    }
 }

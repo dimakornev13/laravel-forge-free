@@ -201,6 +201,9 @@ echo "forge ALL=NOPASSWD: /usr/sbin/service php7.0-fpm reload" >> /etc/sudoers.d
 echo "forge ALL=NOPASSWD: /usr/sbin/service php5.6-fpm reload" >> /etc/sudoers.d/php-fpm
 echo "forge ALL=NOPASSWD: /usr/sbin/service php5-fpm reload" >> /etc/sudoers.d/php-fpm
 
+
+echo "forge ALL=NOPASSWD: /usr/sbin/certbot *" >> /etc/sudoers.d/certbot
+
 # Allow Nginx Reload
 
 echo "forge ALL=NOPASSWD: /usr/sbin/service nginx *" >> /etc/sudoers.d/nginx
@@ -459,12 +462,6 @@ chmod -R 777 /etc/nginx/sites-available /etc/nginx/sites-enabled
 
 chmod 777 /etc/supervisor/conf.d
 
-# work for snap
-snap install core && snap refresh core
-snap install --classic certbot
-ln -s /snap/bin/certbot /usr/bin/certbot
-
-
 # git clone to panel directory
 PATH_TO_PANEL=/home/forge/panel
 git clone https://github.com/moxyrus/laravel-web-panel-hosting.git $PATH_TO_PANEL
@@ -517,8 +514,17 @@ supervisorctl reread
 supervisorctl update
 supervisorctl start laravel-worker:*
 
-service mysql restart
-service nginx restart
-service php7.4-fpm restart
+(crontab -l 2>/dev/null; echo \"* * * * * /usr/bin/php $PATH_TO_PANEL/artisan schedule:run >> /dev/null 2>&1\") | crontab -
 
-# todo add panel's cron for letsencrypt
+#service mysql restart
+#service nginx restart
+#service php7.4-fpm restart
+
+reboot now
+
+# after restart
+# work for snap
+sudo snap install core
+sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot

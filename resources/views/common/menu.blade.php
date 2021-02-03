@@ -9,4 +9,9 @@
             <i class="fas fa-sliders-h"></i> Queue
         </a>
     </li>
+    <li class="py-1">
+        <a href="{{ route('ssl', ['site' => $site]) }}" class="hover:text-green-600 py-3 {{ request()->routeIs('ssl') ? 'text-green-600' : '' }}">
+            <i class="fal fa-file-certificate"></i> SSL
+        </a>
+    </li>
 </ul>

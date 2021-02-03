@@ -36,7 +36,11 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::delete('/{queue}', [Dashboard\QueueController::class, 'delete'])->name('queue.delete');
     });
 
-//    Route::delete('events/{event}', [Dashboard\EventController::class, 'delete'])->name('events.delete');
+    Route::prefix('ssl')->group(function (){
+        Route::get('/{site}', [Dashboard\SslController::class, 'index'])->name('ssl');
+        Route::put('/{site}', [Dashboard\SslController::class, 'store'])->name('ssl.obtain');
+    });
+
 });
 
 

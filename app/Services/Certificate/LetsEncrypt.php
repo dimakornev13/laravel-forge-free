@@ -13,14 +13,10 @@ class LetsEncrypt extends CertificateObtain
     {
         $url = $site->getUrl();
 
-        $output = shell_exec("certbot --nginx --non-interactive --domains {$url}");
+        $this->result = shell_exec("sudo certbot --nginx --noninteractive --agree-tos --register-unsafely-without-email  -d {$url} -d www.{$url}");
 
-        $this->logger->log(
-            stripos($output, 'error') !== false
-                ? LogEvent::TYPE_ERROR
-                : LogEvent::TYPE_SUCCESS,
-            $output
-        );
+        if (stripos($this->result, 'Congratulations! You have successfully enabled') === false)
+            throw new \Error("Couldn't take certificate for {$site->getUrl()} \n {$this->result}");
     }
 
 

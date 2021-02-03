@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\SiteCreated;
 use App\Models\Site;
+use App\Services\Cron\CronAdd;
 use App\Services\Logger\Logger;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -30,18 +31,16 @@ class CronAddListener
      */
     public function handle(SiteCreated $event)
     {
-        try {
-            $this->process($event->site);
+        /** @var CronAdd $service */
+        $service = app(CronAdd::class);
 
-            $this->logger->success("Cron has been added for site {$event->site->getUrl()}");
+        try {
+            $service->process($event->site);
+
+            $this->logger->success($service->getResult());
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage());
         }
     }
 
-
-    private function process(Site $site)
-    {
-        shell_exec("(crontab -l 2>/dev/null; echo \"* * * * * /usr/bin/php {$site->getSiteDir()}/artisan schedule:run >> /dev/null 2>&1\") | crontab -");
-    }
 }

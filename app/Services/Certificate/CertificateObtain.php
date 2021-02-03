@@ -3,19 +3,12 @@
 namespace App\Services\Certificate;
 
 use App\Models\Site;
-use App\Services\Logger\Logger;
+use App\Traits\Result;
 
 abstract class CertificateObtain
 {
-    protected $logger;
 
-
-    public function __construct(Logger $logger)
-    {
-        $this->logger = $logger;
-    }
-
-
+    use Result;
     /**
      * @param \App\Models\Site $site
      * @return mixed
