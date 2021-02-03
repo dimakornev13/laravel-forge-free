@@ -1,4 +1,5 @@
 #/bin/bash
+# wget https://bitbucket.org/m0xy/laravel-web-panel-hosting/raw/master/install.sh && bash install.sh
 
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root."
@@ -75,10 +76,12 @@ apt-get update
 add-apt-repository universe
 
 apt-get install -y build-essential curl pkg-config fail2ban gcc g++ git libmcrypt4 libpcre3-dev \
-make python3 python3-pip sendmail supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev \
-apache2-utils whois
+make python3 python3-pip supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev \
+whois
 
-LOGIN_PASSWORD=$(htpasswd -bnBC 10 "" $LOGIN_PASSWORD | tr -d ':\n')
+#apt-get install -y sendmail
+
+#LOGIN_PASSWORD=$(htpasswd -bnBC 10 "" $LOGIN_PASSWORD | tr -d ':\n')
 
 # Install Python Httpie
 
@@ -502,8 +505,9 @@ sed -i "s/secret/$MYSQL_USER_PASSWORD/g" $PATH_TO_PANEL/.env
 
 php $PATH_TO_PANEL/artisan key:generate
 php $PATH_TO_PANEL/artisan migrate
+php $PATH_TO_PANEL/artisan make:admin $LOGIN $LOGIN_PASSWORD
 
-mysql -u root -e "INSERT INTO panel.users (name, email, password) VALUES('$LOGIN', '$LOGIN', '$LOGIN_PASSWORD')"
+#mysql -u root -e "INSERT INTO panel.users (name, email, password) VALUES('$LOGIN', '$LOGIN', '$LOGIN_PASSWORD')"
 
 
 # nginx default file for panel
@@ -511,8 +515,6 @@ mysql -u root -e "INSERT INTO panel.users (name, email, password) VALUES('$LOGIN
 #rm -rf /etc/nginx/sites-enabled/*
 cp $PATH_TO_PANEL/templates/panel /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
-
-
 
 chown -R forge:forge $PATH_TO_PANEL
 chmod -R 775 $PATH_TO_PANEL
