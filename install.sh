@@ -1,5 +1,5 @@
 #/bin/bash
-# wget https://bitbucket.org/m0xy/laravel-web-panel-hosting/raw/master/install.sh && bash install.sh
+# wget https://raw.githubusercontent.com/moxyrus/laravel-web-panel-hosting/master/install.sh && bash install.sh
 
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root."
@@ -467,7 +467,7 @@ ln -s /snap/bin/certbot /usr/bin/certbot
 
 # git clone to panel directory
 PATH_TO_PANEL=/home/forge/panel
-git clone https://m0xy@bitbucket.org/m0xy/laravel-web-panel-hosting.git $PATH_TO_PANEL
+git clone https://github.com/moxyrus/laravel-web-panel-hosting.git $PATH_TO_PANEL
 
 # mysql section
 # Setup MariaDB Repositories
