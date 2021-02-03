@@ -6,6 +6,7 @@ DEPLOY_DIR=$(date "+%d.%m.%y-%H:%M.%s")
 
 git clone {{ $site->getRepository() }} $ROOT_PATH/$DEPLOY_DIR 2>&1
 
+export COMPOSER_HOME="$HOME/.config/composer";
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --working-dir=$ROOT_PATH/$DEPLOY_DIR 2>&1
 
 npm install --prefix $ROOT_PATH/$DEPLOY_DIR 2>&1 && npm run production --prefix $ROOT_PATH/$DEPLOY_DIR 2>&1
@@ -28,5 +29,5 @@ php $ROOT_PATH/$DEPLOY_DIR/artisan config:cache 2>&1
 php $ROOT_PATH/$DEPLOY_DIR/artisan route:cache 2>&1
 php $ROOT_PATH/$DEPLOY_DIR/artisan view:cache 2>&1
 
-rm -rf $ROOT_PATH/www
+rm $ROOT_PATH/www
 ln -sfn -T $ROOT_PATH/$DEPLOY_DIR $ROOT_PATH/www

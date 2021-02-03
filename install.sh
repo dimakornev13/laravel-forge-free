@@ -74,7 +74,7 @@ add-apt-repository universe
 
 apt-get install -y build-essential curl pkg-config fail2ban gcc g++ git libmcrypt4 libpcre3-dev \
 make python3 python3-pip supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev \
-whois snapd
+whois snapd mc
 
 #apt-get install -y sendmail
 
