@@ -5,15 +5,9 @@ namespace App\Listeners;
 use App\Events\EnvUpdated;
 use App\Models\Site;
 use App\Services\Logger\Logger;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
 
-class EnvUpdatedListener implements ShouldQueue
+class EnvUpdatedListener
 {
-    use InteractsWithQueue, Queueable, Dispatchable;
-
 
     private $logger;
 
