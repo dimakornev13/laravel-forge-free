@@ -359,19 +359,17 @@ EOF
 
 # Disable The Default Nginx Site
 
-rm /etc/nginx/sites-enabled/default
-rm /etc/nginx/sites-available/default
-service nginx restart
+#service nginx restart
 
 # Install A Catch All Server
 
-cat > /etc/nginx/sites-available/000-catch-all << EOF
-server {
-    return 404;
-}
-EOF
-
-ln -s /etc/nginx/sites-available/000-catch-all /etc/nginx/sites-enabled/000-catch-all
+#cat > /etc/nginx/sites-available/000-catch-all << EOF
+#server {
+#    return 404;
+#}
+#EOF
+#
+#ln -s /etc/nginx/sites-available/000-catch-all /etc/nginx/sites-enabled/000-catch-all
 
 # Restart Nginx &amp; PHP-FPM Services
 
@@ -511,8 +509,10 @@ php $PATH_TO_PANEL/artisan make:admin $LOGIN $LOGIN_PASSWORD
 
 
 # nginx default file for panel
-#rm -rf /etc/nginx/sites-available/*
-#rm -rf /etc/nginx/sites-enabled/*
+
+rm /etc/nginx/sites-enabled/default
+rm /etc/nginx/sites-available/default
+
 cp $PATH_TO_PANEL/templates/panel /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
 
