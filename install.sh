@@ -247,7 +247,7 @@ sudo sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.4/cli/php.ini
 
 echo "Configuring PHPRedis"
 echo "extension=redis.so" > /etc/php/7.4/mods-available/redis.ini
-yes '' | apt install php-redis
+yes '' | apt-get install php-redis
 
 # Ensure Imagick Is Available
 
@@ -255,7 +255,7 @@ echo "Configuring Imagick"
 
 apt-get install -y libmagickwand-dev
 echo "extension=imagick.so" > /etc/php/7.4/mods-available/imagick.ini
-yes '' | apt install php-imagick
+yes '' | apt-get install php-imagick
 
 # Configure FPM Pool Settings
 
@@ -427,7 +427,7 @@ if pecl list | grep redis >/dev/null 2>&amp;1;
 then
 echo "Configuring PHPRedis"
 echo "extension=redis.so" > /etc/php/7.4/mods-available/redis.ini
-yes '' | apt install php7.4-redis
+yes '' | apt-get install php7.4-redis
 
 fi
 
@@ -451,16 +451,14 @@ sudo sed -i "s/fs.protected_regular = .*/fs.protected_regular = 0/" /usr/lib/sys
 sysctl --system
 
 
-
-service apparmor stop
-update-rc.d -f apparmor remove
-apt-get remove apparmor apparmor-utils -y
+#
+#service apparmor stop
+#update-rc.d -f apparmor remove
+#apt-get remove apparmor apparmor-utils -y
 
 
 # make able laravel work with next directories
-chmod -R 777 /etc/nginx/sites-available /etc/nginx/sites-enabled
-
-chmod 777 /etc/supervisor/conf.d
+chmod -R 777 /etc/nginx/sites-available /etc/nginx/sites-enabled /etc/supervisor/conf.d
 
 # git clone to panel directory
 PATH_TO_PANEL=/home/forge/panel
@@ -469,7 +467,7 @@ git clone https://github.com/moxyrus/laravel-web-panel-hosting.git $PATH_TO_PANE
 # mysql section
 # Setup MariaDB Repositories
 
-apt install mariadb-client mariadb-server -y
+apt-get install mariadb-client mariadb-server -y
 
 sed -i 's/bind-address/\#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 #mysql_secure_installation
@@ -514,7 +512,7 @@ supervisorctl reread
 supervisorctl update
 supervisorctl start laravel-worker:*
 
-(crontab -l 2>/dev/null; echo \"* * * * * /usr/bin/php $PATH_TO_PANEL/artisan schedule:run >> /dev/null 2>&1\") | crontab -
+(echo "* * * * * /usr/bin/php $PATH_TO_PANEL/artisan schedule:run >> /dev/null 2>&1") | crontab -u forge -
 
 #service mysql restart
 #service nginx restart
@@ -524,7 +522,4 @@ reboot now
 
 # after restart
 # work for snap
-sudo snap install core
-sudo snap refresh core
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo snap install core && sudo snap refresh core && sudo snap install --classic certbot && sudo ln -s /snap/bin/certbot /usr/bin/certbot
