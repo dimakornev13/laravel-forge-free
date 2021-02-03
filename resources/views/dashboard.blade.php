@@ -1,7 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Dashboard') }}
-    </x-slot>
+    <x-slot name="header">{{ __('Dashboard') }}</x-slot>
 
     <div class="container m-auto p-12 flex flex-row space-x-6">
         <div class="w-full">
@@ -10,11 +8,10 @@
                     <p class="text-center">There is no events</p>
 
                 @else
-                    <table>
+                    <table class="w-full">
                         <tr>
-                            <th>Type</th>
-                            <th class="w-75">Message</th>
-                            <th>Datetime</th>
+                            <th class="w-80">Message</th>
+                            <th class="w-20">Datetime</th>
                         </tr>
                         @each('dashboard.events._item', $entities, 'entity')
                     </table>

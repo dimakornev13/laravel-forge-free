@@ -5,9 +5,15 @@ namespace App\Listeners;
 use App\Events\EnvUpdated;
 use App\Models\Site;
 use App\Services\Logger\Logger;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 
-class EnvUpdatedListener
+class EnvUpdatedListener implements ShouldQueue
 {
+    use InteractsWithQueue, Queueable, Dispatchable;
+
 
     private $logger;
 
@@ -32,7 +38,7 @@ class EnvUpdatedListener
     public function handle(EnvUpdated $event)
     {
         try {
-            $this->proccess($event->site);
+            $this->process($event->site);
 
             $this->logger->success(".env file has been successful updated for site {$event->site->getUrl()}");
         } catch (\Throwable $exception) {
@@ -41,18 +47,18 @@ class EnvUpdatedListener
     }
 
 
-    private function proccess(Site $site)
+    private function process(Site $site)
     {
-        $result = file_put_contents($site->getEnvDir(), $site->getEnvironment());
+        $result = file_put_contents($site->getEnvPath(), $site->getEnvironment());
         if ($result === false)
-            throw new \Error("Couldn't update .env file for {$site->getUrl()} in directory {$site->getEnvDir()}");
+            throw new \Error("Couldn't update .env file for {$site->getUrl()} in directory {$site->getEnvPath()}");
 
         $result = shell_exec("php {$site->getSiteDir()}/artisan config:cache");
         if (stripos($result, 'Configuration cached successfully') === false)
-            throw new \Error("Couldn't cache config for {$site->getUrl()} in directory {$site->getEnvDir()} ({$result})");
+            throw new \Error("Couldn't cache config for {$site->getUrl()} in directory {$site->getEnvPath()} ({$result})");
 
         $result = shell_exec("php {$site->getSiteDir()}/artisan queue:restart");
         if (stripos($result, 'Broadcasting queue restart signal') === false)
-            throw new \Error("Couldn't restart queue for {$site->getUrl()} in directory {$site->getEnvDir()} ({$result})");
+            throw new \Error("Couldn't restart queue for {$site->getUrl()} in directory {$site->getEnvPath()} ({$result})");
     }
 }
