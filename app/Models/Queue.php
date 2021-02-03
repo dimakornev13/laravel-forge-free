@@ -54,7 +54,7 @@ class Queue extends Model
     }
 
     function getPath(){
-        return "/etc/supervisor/conf.d/{$this->site->getUrl()}-{$this->id}";
+        return "/etc/supervisor/conf.d/{$this->site->getUrl()}-{$this->id}.conf";
     }
 
     function site()

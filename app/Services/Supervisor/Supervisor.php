@@ -21,7 +21,7 @@ class Supervisor
 
     function delete(Queue $queue)
     {
-        shell_exec("rm -rf {$queue->getPath()}");
+        unlink($queue->getPath());
 
         if(file_exists($queue->getPath()))
             throw new \Error("File {$queue->getPath()} has not been deleted");
