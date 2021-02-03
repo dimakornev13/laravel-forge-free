@@ -58,10 +58,10 @@ class CheckSystem extends Command
             $this->error("Command ({$command}) produces next result ({$result})");
 
 
-        $command = "sudo certbot 2>&1";
+        $command = "sudo certbot --help 2>&1";
         $result = shell_exec($command);
-        if(empty($result))
-            $this->info("Command is ok {$command}");
+        if(stripos($result, 'Certbot can obtain and install HTTPS/TLS/SSL certificates') !== false)
+            $this->info("Command ({$command}) produces next result ({$result})");
         else
             $this->error("Command ({$command}) produces next result ({$result})");
 
@@ -73,8 +73,6 @@ class CheckSystem extends Command
             $this->info("crontab produces next result {$result}");
         else
             $this->error("crontab is empty");
-
-
 
         return 0;
     }
