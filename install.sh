@@ -16,6 +16,9 @@ read LOGIN_PASSWORD
 echo "Enter system user password (Forge user): "
 read FORGE_PASSWORD
 
+echo "Enter ip (for nginx work): "
+read IP_HOST
+
 echo "Enter mysql root password: "
 read MYSQL_ROOT_PASSWORD
 
@@ -509,6 +512,7 @@ rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
 
 cp $PATH_TO_PANEL/templates/panel /etc/nginx/sites-available/
+sed -i "s/default/$IP_HOST/g" /etc/nginx/sites-available/panel
 ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
 
 chown -R forge:forge $PATH_TO_PANEL
