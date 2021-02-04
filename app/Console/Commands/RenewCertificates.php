@@ -54,7 +54,7 @@ class RenewCertificates extends Command
 
         $sites->each(function ($site) use ($service) {
             try {
-                $service->obtainCertificate($site);
+                $service->renewCertificate($site);
 
                 $this->logger->success($service->getResult());
             } catch (\Throwable $exception) {

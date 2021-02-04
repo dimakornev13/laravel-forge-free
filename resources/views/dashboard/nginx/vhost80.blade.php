@@ -4,7 +4,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name {{ $site->getUrl() }};
+    server_name {{ $site->getUrl() }} www.{{ $site->getUrl() }};
     server_tokens off;
     root {{ $site->getSiteDir() }}/public;
 

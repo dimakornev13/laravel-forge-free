@@ -7,8 +7,8 @@ use App\Traits\Result;
 
 abstract class CertificateObtain
 {
-
     use Result;
+
     /**
      * @param \App\Models\Site $site
      * @return mixed
@@ -21,4 +21,11 @@ abstract class CertificateObtain
      * @return mixed
      */
     abstract public function renewCertificate(Site $site);
+
+
+    /**
+     * @param Site $site
+     * @return mixed
+     */
+    abstract public function deleteCertificate(Site $site);
 }

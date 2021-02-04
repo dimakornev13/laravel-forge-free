@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CertificateObtained;
 use App\Events\EnvUpdated;
 use App\Events\QueueCreated;
 use App\Events\QueueDeleted;
@@ -31,8 +32,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         SiteDeleted::class => [
             SiteDeletedListener::class,
+            CronRemoveListener::class,
             NginxRestartListener::class,
-            CronRemoveListener::class
         ],
         QueueCreated::class => [
             SupervisorReload::class
@@ -42,8 +43,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         EnvUpdated::class => [
             EnvUpdatedListener::class
+        ],
+        CertificateObtained::class => [
+            NginxRestartListener::class
         ]
     ];
+
 
     /**
      * Register any events for your application.
