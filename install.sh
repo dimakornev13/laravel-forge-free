@@ -202,7 +202,7 @@ echo "forge ALL=NOPASSWD: /usr/sbin/service php5.6-fpm reload" >> /etc/sudoers.d
 echo "forge ALL=NOPASSWD: /usr/sbin/service php5-fpm reload" >> /etc/sudoers.d/php-fpm
 
 
-echo "forge ALL=NOPASSWD: /usr/sbin/certbot *" >> /etc/sudoers.d/certbot
+echo "forge ALL=NOPASSWD: /usr/bin/certbot *" >> /etc/sudoers.d/certbot
 
 # Allow Nginx Reload
 

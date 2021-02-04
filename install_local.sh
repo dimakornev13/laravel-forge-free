@@ -23,6 +23,8 @@ echo "vagrant ALL=NOPASSWD: /usr/sbin/service nginx *" >> /etc/sudoers.d/nginx
 
 echo "vagrant ALL=NOPASSWD: /usr/bin/supervisorctl *" >> /etc/sudoers.d/supervisor
 
+echo "forge ALL=NOPASSWD: /usr/bin/certbot *" >> /etc/sudoers.d/certbot
+
 chmod 777 /etc/nginx/sites-available /etc/nginx/sites-enabled
 chmod 777 /etc/supervisor/conf.d
 
