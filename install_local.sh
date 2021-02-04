@@ -26,4 +26,10 @@ echo "vagrant ALL=NOPASSWD: /usr/bin/supervisorctl *" >> /etc/sudoers.d/supervis
 chmod 777 /etc/nginx/sites-available /etc/nginx/sites-enabled
 chmod 777 /etc/supervisor/conf.d
 
+# line below prevent issue when address to another laravel project
+# and it has the same env because DOTENV
+php /home/$USER/panel/artisan config:cache
+# line below prevent the problem described before but for queues (i.e. deploy)
+php /home/$USER/panel/artisan queue:restart
+
 echo 'DONE'

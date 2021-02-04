@@ -493,6 +493,12 @@ sed -i "s/secret/$MYSQL_USER_PASSWORD/g" $PATH_TO_PANEL/.env
 php $PATH_TO_PANEL/artisan key:generate
 php $PATH_TO_PANEL/artisan migrate
 php $PATH_TO_PANEL/artisan make:admin $LOGIN $LOGIN_PASSWORD
+# line below prevent issue when address to another laravel project
+# and it has the same env because DOTENV
+php $PATH_TO_PANEL/artisan config:cache
+# line below prevent the problem described before but for queues (i.e. deploy)
+php $PATH_TO_PANEL/artisan queue:restart
+
 
 #mysql -u root -e "INSERT INTO panel.users (name, email, password) VALUES('$LOGIN', '$LOGIN', '$LOGIN_PASSWORD')"
 
