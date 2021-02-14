@@ -518,6 +518,10 @@ ln -s /etc/nginx/sites-available/panel /etc/nginx/sites-enabled/
 chown -R forge:forge $PATH_TO_PANEL
 chmod -R 775 $PATH_TO_PANEL
 
+# fix problem when composer cannot make this folder in home directory
+mkdir /home/forge/.composer
+chown -R forge:forge /home/forge/.composer
+
 cp $PATH_TO_PANEL/templates/panel-supervisor.conf /etc/supervisor/conf.d
 supervisorctl reread
 supervisorctl update

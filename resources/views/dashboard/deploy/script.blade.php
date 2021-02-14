@@ -7,9 +7,10 @@ DEPLOY_DIR=$(date "+%d.%m.%y-%H:%M.%s")
 git clone {{ $site->getRepository() }} --single-branch $ROOT_PATH/$DEPLOY_DIR 2>&1
 
 export COMPOSER_HOME="$HOME/.config/composer";
-COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --working-dir=$ROOT_PATH/$DEPLOY_DIR 2>&1
+COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist --working-dir=$ROOT_PATH/$DEPLOY_DIR 2>&1
+COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --no-interaction --optimize-autoloader --no-dev --working-dir=$ROOT_PATH/$DEPLOY_DIR 2>&1
 
-npm install --prefix $ROOT_PATH/$DEPLOY_DIR 2>&1 && npm run production --prefix $ROOT_PATH/$DEPLOY_DIR 2>&1
+yarn --cwd $ROOT_PATH/$DEPLOY_DIR install 2>&1 && yarn --cwd $ROOT_PATH/$DEPLOY_DIR run production 2>&1
 
 # handle storage directory
 if [ ! -d $ROOT_PATH/storage ]; then
