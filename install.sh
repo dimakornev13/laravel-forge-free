@@ -471,7 +471,14 @@ git clone https://github.com/moxyrus/laravel-web-panel-hosting.git $PATH_TO_PANE
 # mysql section
 # Setup MariaDB Repositories
 
-apt-get install mariadb-client mariadb-server -y
+curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash
+
+debconf-set-selections <<< "mariadb-server mysql-server/data-dir select ''"
+debconf-set-selections <<< "mariadb-server mysql-server/root_password password secret"
+debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password secret"
+touch /etc/mysql/debian.cnf
+
+apt-get update && apt-get install mariadb-client mariadb-server -y
 
 sed -i 's/bind-address/\#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 #mysql_secure_installation

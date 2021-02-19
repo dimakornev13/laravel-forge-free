@@ -12,6 +12,7 @@ vendor/
 .vagrant/
 public/css/app.css
 swapfile
+.gitignore
 .phpunit*
 
 # Compiled Java class files

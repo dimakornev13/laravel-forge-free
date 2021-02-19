@@ -26,9 +26,8 @@ sudo service php7.4-fpm reload 2>&1
 
 # todo opcache enable
 php $ROOT_PATH/$DEPLOY_DIR/artisan migrate --force 2>&1
-php $ROOT_PATH/$DEPLOY_DIR/artisan config:cache 2>&1
-php $ROOT_PATH/$DEPLOY_DIR/artisan route:cache 2>&1
-php $ROOT_PATH/$DEPLOY_DIR/artisan view:cache 2>&1
+php $ROOT_PATH/$DEPLOY_DIR/artisan optimize 2>&1
+php $ROOT_PATH/$DEPLOY_DIR/artisan storage:link 2>&1
 
 rm -rf $ROOT_PATH/www
 ln -sfn -T $ROOT_PATH/$DEPLOY_DIR $ROOT_PATH/www
