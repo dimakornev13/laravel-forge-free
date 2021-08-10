@@ -396,7 +396,7 @@ groups forge
 
 
 
-curl --silent --location https://deb.nodesource.com/setup_12.x | bash -
+curl --silent --location https://deb.nodesource.com/setup_16.x | bash -
 
 apt-get update
 
