@@ -224,12 +224,12 @@ echo "forge ALL=NOPASSWD: /usr/bin/supervisorctl *" >> /etc/sudoers.d/supervisor
 
 # Install Base PHP Packages
 
-apt-get install -y php7.4-cli php7.4-fpm php7.4-dev \
-php7.4-pgsql php7.4-sqlite3 php7.4-gd \
-php7.4-curl php7.4-memcached \
-php7.4-imap php7.4-mysql php7.4-mbstring \
-php7.4-xml php7.4-zip php7.4-bcmath php7.4-soap \
-php7.4-intl php7.4-readline php7.4-msgpack php7.4-igbinary php7.4-gmp
+apt-get install -y php8.0-cli php8.0-fpm php8.0-dev \
+php8.0-pgsql php8.0-sqlite3 php8.0-gd \
+php8.0-curl php8.0-memcached \
+php8.0-imap php8.0-mysql php8.0-mbstring \
+php8.0-xml php8.0-zip php8.0-bcmath php8.0-soap \
+php8.0-intl php8.0-readline php8.0-msgpack php8.0-igbinary php8.0-gmp
 
 # Install Composer Package Manager
 
@@ -240,16 +240,16 @@ fi
 
 # Misc. PHP CLI Configuration
 
-sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.4/cli/php.ini
-sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.4/cli/php.ini
-sudo sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.4/cli/php.ini
-sudo sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.4/cli/php.ini
-sudo sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.4/cli/php.ini
+sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/8.0/cli/php.ini
+sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/8.0/cli/php.ini
+sudo sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/8.0/cli/php.ini
+sudo sed -i "s/memory_limit = .*/memory_limit = 32M/" /etc/php/8.0/cli/php.ini
+sudo sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.0/cli/php.ini
 
 # Ensure PHPRedis Extension Is Available
 
 echo "Configuring PHPRedis"
-echo "extension=redis.so" > /etc/php/7.4/mods-available/redis.ini
+echo "extension=redis.so" > /etc/php/8.0/mods-available/redis.ini
 yes '' | apt-get install php-redis
 
 # Ensure Imagick Is Available
@@ -257,21 +257,21 @@ yes '' | apt-get install php-redis
 echo "Configuring Imagick"
 
 apt-get install -y libmagickwand-dev
-echo "extension=imagick.so" > /etc/php/7.4/mods-available/imagick.ini
+echo "extension=imagick.so" > /etc/php/8.0/mods-available/imagick.ini
 yes '' | apt-get install php-imagick
 
 # Configure FPM Pool Settings
 
-sed -i "s/^user = www-data/user = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/^group = www-data/group = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;listen\.owner.*/listen.owner = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;listen\.group.*/listen.group = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php/7.4/fpm/pool.d/www.conf
+sed -i "s/^user = www-data/user = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/^group = www-data/group = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;listen\.owner.*/listen.owner = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;listen\.group.*/listen.group = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php/8.0/fpm/pool.d/www.conf
 
 # Ensure Sudoers Is Up To Date
 
-LINE="ALL=NOPASSWD: /usr/sbin/service php7.4-fpm reload"
+LINE="ALL=NOPASSWD: /usr/sbin/service php8.0-fpm reload"
 FILE="/etc/sudoers.d/php-fpm"
 grep -qF -- "forge $LINE" "$FILE" || echo "forge $LINE" >> "$FILE"
 
@@ -282,7 +282,7 @@ chmod +t /var/lib/php/sessions
 
 # Write Systemd File For Linode
 
-update-alternatives --set php /usr/bin/php7.4
+update-alternatives --set php /usr/bin/php8.0
 
 #
 # REQUIRES:
@@ -301,20 +301,20 @@ openssl dhparam -out /etc/nginx/dhparams.pem 2048
 
 # Tweak Some PHP-FPM Settings
 
-sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.4/fpm/php.ini
-sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.4/fpm/php.ini
-sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.4/fpm/php.ini
-sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.4/fpm/php.ini
-sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.4/fpm/php.ini
+sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/8.0/fpm/php.ini
+sed -i "s/display_errors = .*/display_errors = On/" /etc/php/8.0/fpm/php.ini
+sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/8.0/fpm/php.ini
+sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/8.0/fpm/php.ini
+sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.0/fpm/php.ini
 
 # Configure FPM Pool Settings
 
-sed -i "s/^user = www-data/user = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/^group = www-data/group = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;listen\.owner.*/listen.owner = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;listen\.group.*/listen.group = forge/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/7.4/fpm/pool.d/www.conf
-sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php/7.4/fpm/pool.d/www.conf
+sed -i "s/^user = www-data/user = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/^group = www-data/group = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;listen\.owner.*/listen.owner = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;listen\.group.*/listen.group = forge/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/8.0/fpm/pool.d/www.conf
+sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php/8.0/fpm/pool.d/www.conf
 
 # Configure Primary Nginx Settings
 
@@ -384,7 +384,7 @@ service nginx reload
 if [ ! -z "\$(ps aux | grep php-fpm | grep -v grep)" ]
 then
     service php8.0pm restart > /dev/null 2>&amp;1
-    service php7.4-fpm restart > /dev/null 2>&amp;1
+    service php8.0-fpm restart > /dev/null 2>&amp;1
 fi
 
 # Add Forge User To www-data Group
@@ -430,8 +430,8 @@ yes '' | pecl install -f redis
 if pecl list | grep redis >/dev/null 2>&amp;1;
 then
 echo "Configuring PHPRedis"
-echo "extension=redis.so" > /etc/php/7.4/mods-available/redis.ini
-yes '' | apt-get install php7.4-redis
+echo "extension=redis.so" > /etc/php/8.0/mods-available/redis.ini
+yes '' | apt-get install php8.0-redis
 
 fi
 
@@ -538,7 +538,7 @@ supervisorctl start all
 
 #service mysql restart
 #service nginx restart
-#service php7.4-fpm restart
+#service php8.0-fpm restart
 
 reboot now
 
