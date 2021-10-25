@@ -1,6 +1,10 @@
 ## Free simple alternative for Laravel Forge
 
-Free simple alternative for Laravel Forge.
+Free simple alternative for Laravel Forge. In other words it configure fast vps from zero to ready state manage (web panel):
+- sites (domains);
+- some config for projects (domains)
+- queues
+- https for domains (letsencrypt)
 
 
 ### Install
