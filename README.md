@@ -2,15 +2,17 @@
 
 Free simple alternative for Laravel Forge.
 
+
 ### Install
 ```
 wget https://raw.githubusercontent.com/moxyrus/laravel-web-panel-hosting/master/install.sh && bash install.sh
 ```
 
 ### Features
+- Non limited domains
 - Zero down deployment (new directory and then symlink to pulibc dir).
 - Easy manager new hosts.
-- Default environment: php 7.4, MariaDB, redis, memcache, Nginx.
+- Default environment: php 8.0, MariaDB, redis, memcache, Nginx.
 - Local queues by supervisor.
 - Sites certificates by Letsencrypt.
 
