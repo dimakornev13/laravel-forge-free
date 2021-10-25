@@ -304,7 +304,7 @@ openssl dhparam -out /etc/nginx/dhparams.pem 2048
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/8.0/fpm/php.ini
 sed -i "s/display_errors = .*/display_errors = On/" /etc/php/8.0/fpm/php.ini
 sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/8.0/fpm/php.ini
-sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/8.0/fpm/php.ini
+sed -i "s/memory_limit = .*/memory_limit = 32M/" /etc/php/8.0/fpm/php.ini
 sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.0/fpm/php.ini
 
 # Configure FPM Pool Settings
