@@ -160,25 +160,6 @@ ssh-keyscan -H github.com >> /home/forge/.ssh/known_hosts
 ssh-keyscan -H bitbucket.org >> /home/forge/.ssh/known_hosts
 ssh-keyscan -H gitlab.com >> /home/forge/.ssh/known_hosts
 
-# Configure Git Settings
-
-git config --global user.name "Dima"
-git config --global user.email "dimakornev13@yandex.ru"
-
-# Add The Reconnect Script Into Forge Directory
-
-# cat > /home/forge/.forge/reconnect << EOF
-#!/usr/bin/env bash
-
-# echo "# Laravel Forge" | tee -a /home/forge/.ssh/authorized_keys > /dev/null
-# echo \$1 | tee -a /home/forge/.ssh/authorized_keys > /dev/null
-
-# echo "# Laravel Forge" | tee -a /root/.ssh/authorized_keys > /dev/null
-# echo \$1 | tee -a /root/.ssh/authorized_keys > /dev/null
-
-# echo "Keys Added!"
-# EOF
-
 # Setup Forge Home Directory Permissions
 
 chown -R forge:forge /home/forge
@@ -243,14 +224,14 @@ fi
 sudo sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/8.0/cli/php.ini
 sudo sed -i "s/display_errors = .*/display_errors = On/" /etc/php/8.0/cli/php.ini
 sudo sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/8.0/cli/php.ini
-sudo sed -i "s/memory_limit = .*/memory_limit = 32M/" /etc/php/8.0/cli/php.ini
+sudo sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/8.0/cli/php.ini
 sudo sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.0/cli/php.ini
 
 # Ensure PHPRedis Extension Is Available
 
 echo "Configuring PHPRedis"
 echo "extension=redis.so" > /etc/php/8.0/mods-available/redis.ini
-yes '' | apt-get install php-redis
+sudo apt install php-redis -y
 
 # Ensure Imagick Is Available
 
@@ -258,7 +239,7 @@ echo "Configuring Imagick"
 
 apt-get install -y libmagickwand-dev
 echo "extension=imagick.so" > /etc/php/8.0/mods-available/imagick.ini
-yes '' | apt-get install php-imagick
+sudo apt install php-imagick -y
 
 # Configure FPM Pool Settings
 
@@ -271,7 +252,7 @@ sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php
 
 # Ensure Sudoers Is Up To Date
 
-LINE="ALL=NOPASSWD: /usr/sbin/service php8.0-fpm reload"
+LINE="forge ALL=NOPASSWD: /usr/sbin/service php8.0-fpm reload"
 FILE="/etc/sudoers.d/php-fpm"
 grep -qF -- "forge $LINE" "$FILE" || echo "forge $LINE" >> "$FILE"
 
@@ -383,7 +364,6 @@ service nginx reload
 
 if [ ! -z "\$(ps aux | grep php-fpm | grep -v grep)" ]
 then
-    service php8.0pm restart > /dev/null 2>&amp;1
     service php8.0-fpm restart > /dev/null 2>&amp;1
 fi
 
@@ -431,7 +411,7 @@ if pecl list | grep redis >/dev/null 2>&amp;1;
 then
 echo "Configuring PHPRedis"
 echo "extension=redis.so" > /etc/php/8.0/mods-available/redis.ini
-yes '' | apt-get install php8.0-redis
+sudo apt install php8.0-redis -y
 
 fi
 
