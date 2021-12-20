@@ -1,8 +1,8 @@
 ## Free simple alternative for Laravel Forge
 
-Free simple alternative for Laravel Forge. In other words it configure fast vps from zero to ready state manage (web panel):
+Free simple alternative for Laravel Forge. In other words it configure vps pretty fast from zero to ready state manage (web panel):
 - sites (domains);
-- some config for projects (domains)
+- some config for projects (.env)
 - queues
 - https for domains (letsencrypt)
 
@@ -14,6 +14,7 @@ wget https://raw.githubusercontent.com/moxyrus/laravel-web-panel-hosting/master/
 
 ### Features
 - Non limited domains
+- git pull by one click
 - Zero down deployment (new directory and then symlink to pulibc dir).
 - Easy manager new hosts.
 - Default environment: php 8.0, MariaDB, redis, memcache, Nginx.
