@@ -7,6 +7,9 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+echo "Enter ip (for nginx work): "
+read IP_HOST
+
 echo "Enter email (login) for panel: "
 read LOGIN
 
@@ -15,9 +18,6 @@ read LOGIN_PASSWORD
 
 echo "Enter system user password (Forge user): "
 read FORGE_PASSWORD
-
-echo "Enter ip (for nginx work): "
-read IP_HOST
 
 echo "Enter mysql root password: "
 read MYSQL_ROOT_PASSWORD
@@ -63,18 +63,9 @@ apt-add-repository ppa:ondrej/nginx -y
 # apt-add-repository ppa:chris-lea/redis-server -y
 apt-add-repository ppa:ondrej/php -y
 
-
-# Update Package Lists
-
-
-
 apt-get update
-# Base Packages
-
-
 
 add-apt-repository universe
-
 apt-get install -y build-essential curl pkg-config fail2ban gcc g++ git libmcrypt4 libpcre3-dev \
 make python3 python3-pip supervisor ufw zip unzip whois zsh ncdu awscli uuid-runtime acl libpng-dev libmagickwand-dev \
 whois snapd mc
@@ -176,27 +167,22 @@ ufw --force enable
 
 # Allow FPM Restart
 
-echo "forge ALL=NOPASSWD: /usr/sbin/service php8.0-fpm reload" > /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php7.4-fpm reload" > /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php7.3-fpm reload" >> /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php7.2-fpm reload" >> /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php7.1-fpm reload" >> /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php7.0-fpm reload" >> /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php5.6-fpm reload" >> /etc/sudoers.d/php-fpm
-echo "forge ALL=NOPASSWD: /usr/sbin/service php5-fpm reload" >> /etc/sudoers.d/php-fpm
-
+echo "forge ALL=NOPASSWD: /usr/sbin/service php8.0-fpm restart" > /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php7.4-fpm restart" > /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php7.3-fpm restart" >> /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php7.2-fpm restart" >> /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php7.1-fpm restart" >> /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php7.0-fpm restart" >> /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php5.6-fpm restart" >> /etc/sudoers.d/php-fpm
+echo "forge ALL=NOPASSWD: /usr/sbin/service php5-fpm restart" >> /etc/sudoers.d/php-fpm
 
 echo "forge ALL=NOPASSWD: /usr/bin/certbot *" >> /etc/sudoers.d/certbot
 
-# Allow Nginx Reload
-
+# Allow Nginx restart
 echo "forge ALL=NOPASSWD: /usr/sbin/service nginx *" >> /etc/sudoers.d/nginx
 
-# Allow Supervisor Reload
-
-echo "forge ALL=NOPASSWD: /usr/bin/supervisorctl *" >> /etc/sudoers.d/supervisor
-
-
+# Allow Supervisor restart
+echo "forge ALL=NOPASSWD: /usr/sbin/service *" >> /etc/sudoers.d/supervisor
 
 #
 # REQUIRES:
@@ -252,7 +238,7 @@ sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php
 
 # Ensure Sudoers Is Up To Date
 
-LINE="forge ALL=NOPASSWD: /usr/sbin/service php8.0-fpm reload"
+LINE="forge ALL=NOPASSWD: /usr/sbin/service php8.0-fpm restart"
 FILE="/etc/sudoers.d/php-fpm"
 grep -qF -- "forge $LINE" "$FILE" || echo "forge $LINE" >> "$FILE"
 
@@ -360,7 +346,7 @@ EOF
 # Restart Nginx &amp; PHP-FPM Services
 
 #service nginx restart
-service nginx reload
+service nginx restart
 
 if [ ! -z "\$(ps aux | grep php-fpm | grep -v grep)" ]
 then

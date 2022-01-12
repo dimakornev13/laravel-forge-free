@@ -2,7 +2,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-.form-control{
+.form-control {
     display: block;
     width: 100%;
     padding: .375rem .75rem;
@@ -13,10 +13,10 @@
     background-color: #fff;
     background-clip: padding-box;
     border-radius: 5px;
-    -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
 
     box-shadow: none;
     border: 2px solid #d7d7d7;
@@ -29,4 +29,23 @@
     outline: 0;
     -webkit-box-shadow: 0;
     box-shadow: 0;
+}
+
+.alert {
+    @apply text-white max-w-md absolute bottom-0 right-0 m-auto bg-opacity-80;
+
+    animation: hide 5s forwards;
+}
+
+@keyframes hide {
+    0% {
+        opacity: 1;
+    }
+    90%{
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        /*z-index: -10;*/
+    }
 }

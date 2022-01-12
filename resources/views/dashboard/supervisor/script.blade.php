@@ -1,4 +1,3 @@
-sudo supervisorctl reread
-sudo supervisorctl update
-sudo supervisorctl start all
+sudo service supervisor restart
+
 php {{ $site->getSiteDir() }}/artisan queue:restart

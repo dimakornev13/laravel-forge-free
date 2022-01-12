@@ -41,6 +41,17 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::put('/{site}', [Dashboard\SslController::class, 'store'])->name('ssl.obtain');
     });
 
+    Route::prefix('nginx')->group(function (){
+        Route::get('/restart', [Dashboard\NginxController::class, 'restart'])->name('nginx.restart');
+    });
+
+    Route::prefix('php')->group(function (){
+        Route::get('/restart', [Dashboard\PhpController::class, 'restart'])->name('php.restart');
+    });
+
+    Route::prefix('supervisor')->group(function (){
+        Route::get('/restart', [Dashboard\SupervisordController::class, 'restart'])->name('supervisor.restart');
+    });
 });
 
 

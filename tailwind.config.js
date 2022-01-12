@@ -1,7 +1,10 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-    purge: ['./storage/framework/views/*.php', './resources/views/**/*.blade.php'],
+    purge: [
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php'
+    ],
 
     theme: {
         extend: {
@@ -17,5 +20,8 @@ module.exports = {
         },
     },
 
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('daisyui'),
+    ],
 };
