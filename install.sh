@@ -250,12 +250,6 @@ sed -i "s/;listen\.group.*/listen.group = forge/" /etc/php/8.0/fpm/pool.d/www.co
 sed -i "s/;listen\.mode.*/listen.mode = 0666/" /etc/php/8.0/fpm/pool.d/www.conf
 sed -i "s/;request_terminate_timeout.*/request_terminate_timeout = 60/" /etc/php/8.0/fpm/pool.d/www.conf
 
-# Ensure Sudoers Is Up To Date
-
-LINE="forge ALL=NOPASSWD: /usr/sbin/service php8.0-fpm reload"
-FILE="/etc/sudoers.d/php-fpm"
-grep -qF -- "forge $LINE" "$FILE" || echo "forge $LINE" >> "$FILE"
-
 # Configure Sessions Directory Permissions
 
 chmod 733 /var/lib/php/sessions
@@ -355,12 +349,7 @@ EOF
 #
 #ln -s /etc/nginx/sites-available/000-catch-all /etc/nginx/sites-enabled/000-catch-all
 
-# Restart Nginx &amp; PHP-FPM Services
-
-# Restart Nginx &amp; PHP-FPM Services
-
-#service nginx restart
-service nginx reload
+service nginx restart
 
 if [ ! -z "\$(ps aux | grep php-fpm | grep -v grep)" ]
 then
