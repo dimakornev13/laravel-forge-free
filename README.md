@@ -9,7 +9,7 @@ Free simple alternative for Laravel Forge. In other words it configure vps prett
 
 ### Install
 ```
-wget https://raw.githubusercontent.com/moxyrus/laravel-web-panel-hosting/master/install.sh && bash install.sh
+wget https://raw.githubusercontent.com/moxyrus/laravel-web-panel-hosting/master/install.sh && sudo bash install.sh
 ```
 
 ### Features
