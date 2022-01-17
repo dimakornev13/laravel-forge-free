@@ -11,8 +11,6 @@ class Queue extends Model
 
     protected $fillable = [
         'timeout',
-        'rest_seconds_when_empty',
-        'failed_job_delay',
         'processes',
         'tries',
         'site_id',
@@ -22,6 +20,11 @@ class Queue extends Model
     protected $guarded = ['*'];
 
     public $timestamps = false;
+
+    function getId()
+    {
+        return $this->id;
+    }
 
     function getQueue()
     {
