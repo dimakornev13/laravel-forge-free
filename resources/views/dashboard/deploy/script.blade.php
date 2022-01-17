@@ -4,13 +4,13 @@
 ROOT_PATH=/home/{{ getHostUser() }}/{{ $site->getUrl() }}
 DEPLOY_DIR=$(date "+%d.%m.%y-%H:%M.%s")
 
-git clone {{ $site->getRepository() }} --single-branch $ROOT_PATH/$DEPLOY_DIR
+git clone {{ $site->getRepository() }} --single-branch $ROOT_PATH/$DEPLOY_DIR 2>&1
 
 export COMPOSER_HOME="$HOME/.config/composer";
-COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist --working-dir=$ROOT_PATH/$DEPLOY_DIR
-COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --no-interaction --optimize --working-dir=$ROOT_PATH/$DEPLOY_DIR
+COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist --working-dir=$ROOT_PATH/$DEPLOY_DIR 2>&1
+COMPOSER_MEMORY_LIMIT=-1 composer dump-autoload --no-interaction --optimize --working-dir=$ROOT_PATH/$DEPLOY_DIR 2>&1
 
-yarn --cwd $ROOT_PATH/$DEPLOY_DIR install && yarn --cwd $ROOT_PATH/$DEPLOY_DIR run production
+yarn --cwd $ROOT_PATH/$DEPLOY_DIR install && yarn --cwd $ROOT_PATH/$DEPLOY_DIR run production 2>&1
 
 # handle storage directory
 if [ ! -d $ROOT_PATH/storage ]; then
@@ -25,10 +25,10 @@ ln -sfn $ROOT_PATH/.env $ROOT_PATH/$DEPLOY_DIR
 rm -rf $ROOT_PATH/www
 ln -sfn -T $ROOT_PATH/$DEPLOY_DIR $ROOT_PATH/www
 
-sudo service php8.0-fpm reload
-
 # todo opcache enable
-php $ROOT_PATH/$DEPLOY_DIR/artisan migrate --force
-php $ROOT_PATH/$DEPLOY_DIR/artisan optimize
-php $ROOT_PATH/$DEPLOY_DIR/artisan storage:link
-php $ROOT_PATH/$DEPLOY_DIR/artisan queue:restart
+php $ROOT_PATH/$DEPLOY_DIR/artisan migrate --force 2>&1
+php $ROOT_PATH/$DEPLOY_DIR/artisan optimize 2>&1
+php $ROOT_PATH/$DEPLOY_DIR/artisan storage:link 2>&1
+php $ROOT_PATH/$DEPLOY_DIR/artisan queue:restart 2>&1
+
+sudo service php8.0-fpm restart

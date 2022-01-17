@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Queue extends Model
 {
-    use HasFactory;
-
     protected $table = 'queues';
 
     protected $fillable = [
@@ -18,11 +15,16 @@ class Queue extends Model
         'failed_job_delay',
         'processes',
         'tries',
-        'site_id'
+        'site_id',
+        'queue'
     ];
 
     protected $guarded = ['*'];
 
+    function getQueue()
+    {
+        return $this->queue;
+    }
 
     function getTimeout()
     {
@@ -53,7 +55,8 @@ class Queue extends Model
         return $this->tries;
     }
 
-    function getPath(){
+    function getPath()
+    {
         return "/etc/supervisor/conf.d/{$this->site->getUrl()}-{$this->id}.conf";
     }
 
