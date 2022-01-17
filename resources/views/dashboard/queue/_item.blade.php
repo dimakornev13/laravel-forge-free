@@ -5,8 +5,6 @@
 <tr class="text-center">
     <td>{{ $queue->getQueue() }}</td>
     <td>{{ $queue->getTimeout() }}</td>
-    <td>{{ $queue->getRestSecondsWhenEmpty() }}</td>
-    <td>{{ $queue->getFailedJobDelay() }}</td>
     <td>{{ $queue->getProcesses() }}</td>
     <td>{{ $queue->getTries() }}</td>
     <td>

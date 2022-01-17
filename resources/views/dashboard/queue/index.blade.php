@@ -19,8 +19,6 @@
                             <tr>
                                 <th>connection</th>
                                 <th>timeout</th>
-                                <th>rest_seconds_when_empty</th>
-                                <th>failed_job_delay</th>
                                 <th>processes</th>
                                 <th>tries</th>
                                 <th>actions</th>

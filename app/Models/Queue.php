@@ -21,9 +21,11 @@ class Queue extends Model
 
     protected $guarded = ['*'];
 
+    public $timestamps = false;
+
     function getQueue()
     {
-        return $this->queue;
+        return $this->queue ?? 'default';
     }
 
     function getTimeout()

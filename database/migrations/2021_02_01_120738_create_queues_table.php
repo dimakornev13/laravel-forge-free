@@ -17,13 +17,10 @@ class CreateQueuesTable extends Migration
             $table->id();
 
             $table->integer('timeout');
-            $table->integer('rest_seconds_when_empty');
-            $table->integer('failed_job_delay');
             $table->integer('processes');
             $table->integer('tries');
+            $table->string('queue')->default('default');
             $table->integer('site_id');
-
-            $table->timestamps();
         });
     }
 

@@ -3,7 +3,7 @@
 ?>
 [program:{{ $queue->site->getCleanUrl() }}-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php {{ $queue->site->getSiteDir() }}/artisan queue:work --queue={!! $queue->getQueue() !!}
+command=php {{ $queue->site->getSiteDir() }}/artisan queue:work --queue={!! $queue->getQueue() !!} --tries={!! $queue->getTries() !!}
 autostart=true
 autorestart=true
 stopasgroup=true
