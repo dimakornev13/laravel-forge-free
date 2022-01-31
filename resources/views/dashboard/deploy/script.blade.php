@@ -2,7 +2,7 @@
 /** @var \App\Models\Site $site */
 ?>
 ROOT_PATH=/home/{{ getHostUser() }}/{{ $site->getUrl() }}
-DEPLOY_DIR=$(date "+%d.%m.%y-%H:%M.%s")
+DEPLOY_DIR=$(date "+%d.%m.%y-%H.%M.%s")
 
 git clone {{ $site->getRepository() }} --single-branch $ROOT_PATH/$DEPLOY_DIR 2>&1
 
