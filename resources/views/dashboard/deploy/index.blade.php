@@ -3,6 +3,7 @@
 ?>
 
 <x-app-layout>
+    <x-slot name="meta_title">Deploy {{ $site->getUrl() }}</x-slot>
     <x-slot name="header">{{ $site->getUrl() }}</x-slot>
 
     <div class="container max-w-7xl m-auto py-12 flex flex-row space-x-4">

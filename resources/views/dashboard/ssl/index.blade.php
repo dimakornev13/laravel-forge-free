@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="meta_title">Ssl for {{ $site->getUrl() }}</x-slot>
     <x-slot name="header">Ssl for {{ $site->getUrl() }}</x-slot>
 
     <div class="container m-auto py-12">

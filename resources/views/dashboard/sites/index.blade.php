@@ -1,7 +1,6 @@
 <x-app-layout>
-    <x-slot name="header">
-        Sites
-    </x-slot>
+    <x-slot name="meta_title">Sites</x-slot>
+    <x-slot name="header">Sites</x-slot>
 
     <div class="container m-auto py-12">
         <div class="w-6/12 m-auto">
