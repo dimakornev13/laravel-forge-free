@@ -19,7 +19,7 @@ class LetsEncrypt extends CertificateObtain
 
     public function renewCertificate(Site $site)
     {
-        $this->result = (string)shell_exec("sudo certbot --nginx --noninteractive -d {$site->getUrl()} 2>&1");
+        $this->result = (string)shell_exec("sudo certbot --nginx --noninteractive -d {$site->getUrl()} -d www.{$site->getUrl()} 2>&1");
     }
 
     public function deleteCertificate(Site $site){
